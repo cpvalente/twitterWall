@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  padding: 0;
+
+  height: 1280;
+  width: 720;
+  background: #000;
+
+  text-align: center;
+  color: #FFF;
+  text-transform: uppercase;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 320px);
+  grid-template-rows: repeat(4, 180px);
+  grid-auto-flow: row;
+}
+
+.cell {
+  place-self: center;
+  width: 100%;
+}
