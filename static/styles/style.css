@@ -2,13 +2,12 @@ body {
   margin: 0;
   padding: 0;
 
-  height: 1280;
-  width: 720;
+  width: 1280px;
+  height: 720px;
   background: #000;
 
-  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
   color: #FFF;
-  text-transform: uppercase;
 }
 
 .container {
@@ -20,5 +19,8 @@ body {
 
 .cell {
   place-self: center;
-  width: 100%;
+  width: 310px;
+  word-wrap: break-word;
+
+  text-align: center;
 }
