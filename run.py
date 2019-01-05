@@ -1,19 +1,40 @@
 import webRender as w
 import twitterStream as t
-import csv
+
+import configparser
 
 if __name__ == '__main__':
+    # get settings from file
+    print('!!!!!!!!!!!!!!')
+    print('Opening settings file...')
+    config = configparser.ConfigParser()
+    config.readfp(open(r'config.cfg'))
 
-    # starting Flask application
-    app = w.create_app()  # Create application with our config file
-    app.run(host='0.0.0.0', port='8001')  # Run our application
+    flask = config['FLASK OPTIONS']
+    settings = config['APPLICATION']
 
-    # load results from last session
+    # get network settigns
+    print('Getting network settings...')
+    host = flask['HOST']
+    port = flask['PORT']
+    print('Host: {} Port: {}'.format(host, port))
+
+    # get keyword (might be list)
+    print('Getting keyword(s)...')
+    keywords = settings['KEYWORDS'].split(',')
+    print (keywords)
+
+    # get language (might be list)
+    print('Getting language(s)...')
+    languages = settings['LANGUAGE'].split(',')
+    print (languages)
 
     # setup twitter stream
-    keywords = ['kristiansand', 'kilden', 'fake news']
-    languages = ['en']
-    db = 'db/tweets.csv'
-
+    print('Initialize twitter stream...')
     twitter_streamer = t.TwitterStreamer()
-    twitter_streamer.stream_tweets(db, keywords, languages)
+    twitter_streamer.stream_tweets(settings['DB'], keywords, languages)
+
+    # starting Flask application
+    print('Initialize Flask...')
+    app = w.create_app()  # Create application with our config file
+    app.run(host=host, port=port)  # Run our application
