@@ -9,16 +9,20 @@ body {
   border-collapse: collapse;
 }
 
-.table td, .table th {
+.table td {
   padding: 8px;
 }
 
 .table tr:nth-child(even){background-color: #f2f2f2;}
 
 .table tr{background-color: #bbb}
-.table tr:hover {background-color: #ddd;}
 
-.table th {
+.table tr:hover {
+  color:#900;
+  background-color: #ddd;
+}
+
+.table tr:first-child {
   text-align: left;
   background-color: #F90;
   color: white;

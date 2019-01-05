@@ -3,21 +3,34 @@
   <head>
     <meta charset="utf-8">
     <title>Twitter Wall - Approval</title>
-      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles/table.css') }}"/>
-      <script src="{{ url_for('static', filename='jquery-3.3.1.min.js') }}"></script>
-      <script>
-        $(function() {
-            startRefresh();
-        });
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles/table.css') }}"/>
+    <script src="{{ url_for('static', filename='jquery-3.3.1.min.js') }}"></script>
+    <script>
+      $(function() {
+        startRefresh();
+      });
 
-        function startRefresh() {
-            setTimeout(startRefresh,1000);
-            $.get('tablecontent.html', function(data) {
-                $('body').html(data);
-            });
-        }
-      </script>
+      function startRefresh() {
+        setTimeout(startRefresh, 1000);
+        var table = $('.table');
+        $.getJSON('tablecontent.json', function(data) {
+          table.empty()
+          $(data).each(function(index, item) {
+            table.append(
+              $(`<tr><td>${item.id}</td>
+                     <td>${item.date}</td>
+                     <td>${item.date}</td>
+                     <td>${item.user}</td>
+                     <td>${item.text}</td>
+                     <td>${item.status}</td></tr>`)
+            );
+          });
+        });
+      }
+    </script>
   </head>
   <body>
+    <div class="table">
+    </div>
   </body>
 </html>

@@ -1,12 +1,14 @@
 from flask import Blueprint, render_template
 import os
-from tablib import Dataset
+import csv
+import json
 
 web_app = Blueprint('home_view', __name__)
 
 # get path for db
 db_path = os.path.join("/".join(os.path.dirname(__file__).split("/")[:-1]),'db/tweets.csv')
 print(db_path)
+
 
 @web_app.route('/')
 @web_app.route('/home')
@@ -21,11 +23,14 @@ def display_table():
     return render_template('table.html')
 
 
-@web_app.route('/tablecontent.html')
+@web_app.route('/tablecontent.json')
 def table_content():
-    """Function renders table content."""
-    dataset = Dataset().load(open(db_path).read())
-    return render_template('content.html', data=dataset.html)
+    """Function returns json from table csv."""
+    csvfile = open(db_path, 'r')
+    fieldnames = ("id", "date", "user", "text", "status")
+    reader = csv.DictReader(csvfile, fieldnames)
+    out = json.dumps([row for row in reader])
+    return out
 
 
 @web_app.route('/screen1')
