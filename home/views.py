@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 import os
-import tablib
+from tablib import Dataset
 
 web_app = Blueprint('home_view', __name__)
 
@@ -13,12 +13,15 @@ def display_home_page():
 
 @web_app.route('/table')  # Route for the page
 def display_table():
-    dataset = tablib.Dataset()
-    with open(os.path.join(os.path.dirname(__file__),'tweets.csv')) as f:
-        dataset.csv = f.read()
+    return render_template('table.html')
 
-    data = dataset.html
-    return render_template('table.html', data=data)
+@web_app.route('/screen1content.html')
+def json_screen1():
+    path = os.path.dirname(__file__)
+
+    dataset = Dataset().load(open(os.path.join("/".join(path.split("/")[:-1]),'db/tweets.csv')).read())
+    return render_template('content.html', data=dataset.html)
+
 
 
 @web_app.route('/screen1')  # Route for the page

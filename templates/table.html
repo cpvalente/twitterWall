@@ -4,12 +4,20 @@
     <meta charset="utf-8">
     <title>Twitter Wall - Approval</title>
       <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles/table.css') }}"/>
+      <script src="{{ url_for('static', filename='jquery-3.3.1.min.js') }}"></script>
+      <script>
+        $(function() {
+            startRefresh();
+        });
+
+        function startRefresh() {
+            setTimeout(startRefresh,1000);
+            $.get('screen1content.html', function(data) {
+                $('body').html(data);
+            });
+        }
+      </script>
   </head>
   <body>
-    <div class="table">
-      {% block body %}
-      {{ data|safe }}
-      {% endblock %}
-    </div>
   </body>
 </html>
