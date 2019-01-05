@@ -12,7 +12,7 @@
 
         function startRefresh() {
             setTimeout(startRefresh,1000);
-            $.get('screen1content.html', function(data) {
+            $.get('tablecontent.html', function(data) {
                 $('body').html(data);
             });
         }
