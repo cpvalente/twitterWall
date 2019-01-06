@@ -30,7 +30,7 @@ class TwitterStreamer():
         auth = self.authenticator.authenticate()
 
         listener = TwitterListener(save_to)
-        stream = Stream(auth, listener)
+        stream = Stream(auth, listener, tweet_mode='extended')
         stream.filter(track=keywords, is_async=True, languages=lang)
         # myStream.filter(follow=["2211149702"])
 
@@ -91,9 +91,14 @@ class TwitterListener(StreamListener):
             print('!!!!!!!!shouldhave downloaded something')
 
         self.next_screen_id = (self.next_screen_id % 16) + 1
+        tweet = ''
+        try:
+            tweet = status.extended_tweet["full_text"]
+        except:
+            tweet = status.text
         data = [status.id, status.created_at,
                 self.cleanup(status.user.screen_name),
-                self.cleanup(status.text),
+                self.cleanup(tweet),
                 self.STATUS,
                 self.next_screen_id]
 
