@@ -46,6 +46,7 @@ def display_screen2():
     """Function renders tweet screen."""
     return render_template('screen2.html')
 
+
 @web_app.route('/screen_temp')
 def display_screen():
     """Function renders tweet screen."""
@@ -65,8 +66,7 @@ def screen_content():
         for it, line in enumerate(csvfile, 1):
             if (it > limit):
                 break
-            line = line + "," + str(it) + "\n"
-            row_list = row_list + line
+            row_list = row_list + line + "\n"
 
     reader_list = csv.DictReader(io.StringIO(row_list), fieldnames)
     out = json.dumps([row for row in reader_list])

@@ -30,8 +30,8 @@
         refresh();
       });
 
-      function refresh(id=1) {
-        setTimeout(refresh, 15000, (id + 1) % 16);
+      function refresh() {
+        setTimeout(refresh, 1000);
         $.getJSON('screencontent.json', function(data) {
           $(data).each(function(index, item) {
             var typed = list[item.screen_id-1];

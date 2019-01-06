@@ -46,9 +46,18 @@ class TwitterListener(StreamListener):
         s_ = s_.replace('\n', ' ').replace('\r', '')
         return s_
 
+    def get_last_id(self):
+        id = 0
+        with open(self.save_to, "r") as file:
+            for line in file:
+                if line[-1].isdigit():
+                    id = int(line[-1])
+        return id
+
     def __init__(self, save_to):
         super().__init__()
         self.save_to = save_to
+        self.next_screen_id = self.get_last_id()
         return
 
     def on_status(self, status):
