@@ -8,6 +8,7 @@
     <script src="{{ url_for('static', filename='typed.min.js') }}"></script>
     <script>
       var list = new Array();
+      var tweet_ids = new Array();
       $(function() {
         var container = $('.container');
         // build cells with empty text
@@ -23,22 +24,24 @@
                         backSpeed: 0,
                         smartBackspace: true
           });
-          list.push(t)
+          list.push(t);
+          tweet_ids.push("0");
         }
         refresh();
       });
 
       function refresh(id=1) {
-        setTimeout(refresh, 15000, id + 1);
-
+        setTimeout(refresh, 15000, (id + 1) % 16);
         $.getJSON('screencontent.json', function(data) {
-          console.log(data);
           $(data).each(function(index, item) {
-            console.log(item.screen_id)
-            list[item.screen_id].strings = item.text
-          });
+            var typed = list[item.screen_id-1];
+            if (typed.strings[0] != item.text) {
+              typed.strings = [item.text];
+              typed.reset();
+            }
         });
-      }
+      });
+    }
     </script>
   </head>
   <body>

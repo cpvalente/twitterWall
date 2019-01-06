@@ -39,12 +39,12 @@ class TwitterListener(StreamListener):
     """Listener Class to handle twitter streams."""
 
     STATUS = 'FOR_REVIEW'
+    next_screen_id = 0
 
     def cleanup(self, s):
         s_ = ''.join([i if ord(i) < 128 else ' ' for i in s])
         s_ = s_.replace('\n', ' ').replace('\r', '')
         return s_
-
 
     def __init__(self, save_to):
         super().__init__()
@@ -81,10 +81,13 @@ class TwitterListener(StreamListener):
             media_files.add(media[0]['media_url'])
             print('!!!!!!!!shouldhave downloaded something')
 
+        self.next_screen_id = (self.next_screen_id % 16) + 1
         data = [status.id, status.created_at,
                 self.cleanup(status.user.screen_name),
                 self.cleanup(status.text),
-                self.STATUS]
+                self.STATUS,
+                self.next_screen_id]
+
         print (data)
 
         try:
