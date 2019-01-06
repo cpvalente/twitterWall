@@ -5,22 +5,37 @@
     <title>Twitter Wall - Screen 1</title>
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
     <script src="{{ url_for('static', filename='jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='typed.min.js') }}"></script>
     <script>
+      var list = new Array();
       $(function() {
-          startRefresh();
+        var container = $('.container');
+        // build cells with empty text
+        for(var i = 1; i <= 16; i++){
+          container.append(
+            $(`<div class="cell">
+                <span id="screen${i}"></span>
+               </div>`)
+          );
+          t = new Typed(`#screen${i}`, {
+                        strings: [' '],
+                        typeSpeed: 30,
+                        backSpeed: 0,
+                        smartBackspace: true
+          });
+          list.push(t)
+        }
+        refresh();
       });
 
-      function startRefresh() {
-        setTimeout(startRefresh, 3000);
-        var container = $('.container');
-        container.empty()
+      function refresh(id=1) {
+        setTimeout(refresh, 15000, id + 1);
+
         $.getJSON('screencontent.json', function(data) {
+          console.log(data);
           $(data).each(function(index, item) {
-            container.append(
-              $(`<div class="cell">
-                 ${item.text}
-                 </div>`)
-            );
+            console.log(item.screen_id)
+            list[item.screen_id].strings = item.text
           });
         });
       }

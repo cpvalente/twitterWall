@@ -41,7 +41,10 @@ class TwitterListener(StreamListener):
     STATUS = 'FOR_REVIEW'
 
     def cleanup(self, s):
-        return ''.join([i if ord(i) < 128 else ' ' for i in s])
+        s_ = ''.join([i if ord(i) < 128 else ' ' for i in s])
+        s_ = s_.replace('\n', ' ').replace('\r', '')
+        return s_
+
 
     def __init__(self, save_to):
         super().__init__()

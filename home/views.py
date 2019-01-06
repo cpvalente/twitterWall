@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 import os
 import csv
 import json
+import io
 from file_read_backwards import FileReadBackwards
 
 web_app = Blueprint('home_view', __name__)
@@ -45,23 +46,31 @@ def display_screen2():
     """Function renders tweet screen."""
     return render_template('screen2.html')
 
+@web_app.route('/screen_temp')
+def display_screen():
+    """Function renders tweet screen."""
+    return render_template('screen_temp.html')
+
 
 @web_app.route('/screencontent.json')
 def screen_content():
     """Function returns json from selected data in csv table."""
+    fieldnames = ('id', 'date', 'user', 'text', 'status', 'screen_id')
     limit = 16
     approval_string = 'FOR_REVIEW'
-    row_list = []
-    with open(db_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        it = 0
-        for row in reader:
-            if it >= limit:
+    row_list = ''
+
+    with FileReadBackwards(db_path, encoding="utf-8") as csvfile:
+        # getting lines by lines starting from the last line up
+        for it, line in enumerate(csvfile, 1):
+            if (it > limit):
                 break
-            elif row['status'] == approval_string:
-                row_list.append(row)
-                it = it + 1
-    out = json.dumps(row_list)
+            line = line + "," + str(it) + "\n"
+            row_list = row_list + line
+
+    reader_list = csv.DictReader(io.StringIO(row_list), fieldnames)
+    out = json.dumps([row for row in reader_list])
+    print (out)
     return out
 
 
