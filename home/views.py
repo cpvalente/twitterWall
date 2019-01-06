@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 import os
 import csv
 import json
+from file_read_backwards import FileReadBackwards
 
 web_app = Blueprint('home_view', __name__)
 
@@ -25,9 +26,9 @@ def display_table():
 
 @web_app.route('/tablecontent.json')
 def table_content():
-    """Function returns json from table csv."""
+    """Function returns json from csv table."""
     csvfile = open(db_path, 'r')
-    fieldnames = ("id", "date", "user", "text", "status")
+    fieldnames = ('id', 'date', 'user', 'text', 'status')
     reader = csv.DictReader(csvfile, fieldnames)
     out = json.dumps([row for row in reader])
     return out
@@ -45,6 +46,25 @@ def display_screen2():
     return render_template('screen2.html')
 
 
+@web_app.route('/screencontent.json')
+def screen_content():
+    """Function returns json from selected data in csv table."""
+    limit = 16
+    approval_string = 'FOR_REVIEW'
+    row_list = []
+    with open(db_path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        it = 0
+        for row in reader:
+            if it >= limit:
+                break
+            elif row['status'] == approval_string:
+                row_list.append(row)
+                it = it + 1
+    out = json.dumps(row_list)
+    return out
+
+
 @web_app.errorhandler(404)  # Not found
 @web_app.errorhandler(403)  # Forbidden
 @web_app.errorhandler(410)  # Gone
@@ -52,3 +72,6 @@ def display_screen2():
 def page_not_found(e):
     """Function for error handling."""
     return 'Error encountered {}'.format(e)
+
+if __name__ == '__main__':
+    screen_content()

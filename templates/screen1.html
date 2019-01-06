@@ -6,77 +6,28 @@
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
     <script src="{{ url_for('static', filename='jquery-3.3.1.min.js') }}"></script>
     <script>
-    // every couple of seconds (on trigger?) check for new values
-    // if there is something new
-    // get cell to modify
-    // get current text on that cell
-    // backspace from that text
-    // write new text
-    // ideally update_cell(id, time out, time in)
-      var i = 0;
-      var txt = 'Lorem ipsum dummy text blabla.';
-      var speed = 50;
-      var id = "1"
-      function typeWriter() {
-        if (i < txt.length) {
-          console.log("Here")
-          document.getElementById(id).innerHTML += txt.charAt(i);
-          i++;
-          setTimeout(typeWriter, speed);
-        }
+      $(function() {
+          startRefresh();
+      });
+
+      function startRefresh() {
+        setTimeout(startRefresh, 3000);
+        var container = $('.container');
+        container.empty()
+        $.getJSON('screencontent.json', function(data) {
+          $(data).each(function(index, item) {
+            container.append(
+              $(`<div class="cell">
+                 ${item.text}
+                 </div>`)
+            );
+          });
+        });
       }
     </script>
   </head>
   <body>
     <div class="container">
-     <div class="cell" id="1">
-       Apparently its 100% fake to some but why would this be plastered all. Over sky sports news https://t.co/Jp6u3KUhjC
-     </div>
-     <div class="cell" id="2">
-       CELL 2
-     </div>
-     <div class="cell" id="3">
-       CELL 3
-     </div>
-     <div class="cell" id="4">
-       CELL 4
-     </div>
-     <div class="cell" id="5">
-       CELL 5
-     </div>
-     <div class="cell" id="6">
-       CELL 6
-     </div>
-     <div class="cell" id="7">
-       CELL 7
-     </div>
-     <div class="cell" id="8">
-       CELL 8
-     </div>
-     <div class="cell" id="9">
-       CELL 9
-     </div>
-     <div class="cell" id="10">
-       CELL 10
-     </div>
-     <div class="cell" id="11">
-       CELL 11
-     </div>
-     <div class="cell" id="12">
-       CELL 12
-     </div>
-     <div class="cell" id="13">
-       CELL 13
-     </div>
-     <div class="cell" id="14">
-       CELL 14
-     </div>
-     <div class="cell" id="15">
-       CELL 15
-     </div>
-     <div class="cell" id="16">
-       CELL 16
-     </div>
    </div>
   </body>
 </html>

@@ -4,6 +4,9 @@ import twitterStream as t
 import configparser
 
 if __name__ == '__main__':
+    # move all of this to util.py
+    # https://stackoverflow.com/questions/13034496/using-global-variables-between-files
+
     # get settings from file
     print('!!!!!!!!!!!!!!')
     print('Opening settings file...')
@@ -36,5 +39,5 @@ if __name__ == '__main__':
 
     # starting Flask application
     print('Initialize Flask...')
-    app = w.create_app()  # Create application with our config file
-    app.run(host=host, port=port)  # Run our application
+    app = w.create_app()  # Create application
+    app.run(host=host, port=port)  # Run application

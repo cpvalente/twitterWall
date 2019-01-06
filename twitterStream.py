@@ -1,7 +1,6 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-from tweepy import Cursor
 
 import configparser
 import csv
@@ -47,17 +46,17 @@ class TwitterListener(StreamListener):
     def __init__(self, save_to):
         super().__init__()
         self.save_to = save_to
-
-
+        return
 
     def on_status(self, status):
-
         # Start with doing some filtering
         # avoid retweets
         if hasattr(status, 'retweeted_status'):
             if (status.retweeted_status):
                 print('retweet filtered')
                 return
+        # avoid replies
+        # ! not working properly
         if hasattr(status, 'in_reply_to_status_id'):
             if (status.in_reply_to_status_id):
                 print('reply filtered')
@@ -79,7 +78,8 @@ class TwitterListener(StreamListener):
             media_files.add(media[0]['media_url'])
             print('!!!!!!!!shouldhave downloaded something')
 
-        data = [status.id, self.cleanup(status.user.screen_name),
+        data = [status.id, status.created_at,
+                self.cleanup(status.user.screen_name),
                 self.cleanup(status.text),
                 self.STATUS]
         print (data)
@@ -101,6 +101,7 @@ class TwitterListener(StreamListener):
 
     def on_timeout(self):
         print('Timeout error, keeping connection')
+        # return True keeps connection alieve
         return True
 
 
