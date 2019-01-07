@@ -60,17 +60,22 @@ def screen_content():
     limit = 16
     approval_string = 'FOR_REVIEW'
     row_list = ''
+    screens = {}
 
     with FileReadBackwards(db_path, encoding="utf-8") as csvfile:
+        screenFieldIndex = fieldnames.index('screen_id')
         # getting lines by lines starting from the last line up
-        for it, line in enumerate(csvfile, 1):
-            if (it > limit):
-                break
+        for line in csvfile:
+            screen_id = list(csv.reader([line]))[0][screenFieldIndex]
+            if (len(screens) >= limit):
+                break  # all screens have content
+            if (screen_id in screens):
+                continue   # screen already have content
             row_list = row_list + line + "\n"
+            screens[screen_id] = True   # mark that screen have content
 
     reader_list = csv.DictReader(io.StringIO(row_list), fieldnames)
     out = json.dumps([row for row in reader_list])
-    print (out)
     return out
 
 
@@ -81,6 +86,7 @@ def screen_content():
 def page_not_found(e):
     """Function for error handling."""
     return 'Error encountered {}'.format(e)
+
 
 if __name__ == '__main__':
     screen_content()
