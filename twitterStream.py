@@ -39,6 +39,7 @@ class TwitterListener(StreamListener):
     """Listener Class to handle twitter streams."""
 
     STATUS = 'FOR_REVIEW'
+    stay_connected = True
     next_screen_id = 0
 
     def cleanup(self, s):
@@ -50,8 +51,10 @@ class TwitterListener(StreamListener):
         id = 0
         with open(self.save_to, "r") as file:
             for line in file:
-                if line[-1].isdigit():
-                    id = int(line[-1])
+                last = line[-3:].strip(',')
+                last = last.strip('\n')
+                if last.isdigit():
+                    id = int(last)
         return id
 
     def __init__(self, save_to):
@@ -101,17 +104,17 @@ class TwitterListener(StreamListener):
                 self.cleanup(tweet),
                 self.STATUS,
                 self.next_screen_id]
-
-        print (data)
+        print("From twitter listener")
+        print(data)
 
         try:
             with open(self.save_to, 'a') as write_file:
                 writer = csv.writer(write_file)
                 writer.writerow(data)
-            return True
+            return self.stay_connected
         except BaseException as e:
             print ('Error on data {}'.format(e))
-        return True
+        return self.stay_connected
 
     def on_error(self, status_code):
         print (status_code)
@@ -122,7 +125,11 @@ class TwitterListener(StreamListener):
     def on_timeout(self):
         print('Timeout error, keeping connection')
         # return True keeps connection alieve
-        return True
+        return False
+
+    def disconnect(self):
+        self.stay_connected = False
+        return
 
 
 if __name__ == '__main__':
